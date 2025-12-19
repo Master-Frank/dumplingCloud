@@ -1134,7 +1134,11 @@ async function generateShareImagePreview(){
   ctx.font = "500 32px system-ui,-apple-system,Segoe UI,Roboto,PingFang SC,Microsoft YaHei,sans-serif";
   const subLines = wrapLines(ctx, combo.sub, maxTextW);
   const subLineH = 46;
-  const subMax = Math.max(0, Math.min(5, Math.floor((qrTopY - 16 - infoY) / subLineH) + 1));
+  const bottomLimitY = cardY + cardH - 56;
+  const minAfterSubY = 84 + 52 + 26;
+  const subMaxByQr = Math.max(0, Math.min(5, Math.floor((qrTopY - 16 - infoY) / subLineH) + 1));
+  const subMaxByBottom = Math.max(0, Math.min(5, Math.floor((bottomLimitY - minAfterSubY - infoY) / subLineH) + 1));
+  const subMax = Math.min(subMaxByQr, subMaxByBottom);
   for(let i=0;i<Math.min(subLines.length, subMax);i++){
     ctx.fillText(subLines[i], titleX, infoY);
     infoY += 46;
@@ -1147,9 +1151,10 @@ async function generateShareImagePreview(){
   infoY += 50;
   ctx.fillStyle = "#3b2f2a";
   ctx.font = "650 36px system-ui,-apple-system,Segoe UI,Roboto,PingFang SC,Microsoft YaHei,sans-serif";
-  const lines = wrapLines(ctx, bless, maxTextW);
+  const blessTextW = Math.max(260, (qrBoxX - 28) - titleX);
+  const lines = wrapLines(ctx, bless, blessTextW);
   const blessLineH = 52;
-  const blessMax = Math.max(0, Math.min(5, Math.floor((qrTopY - 16 - infoY) / blessLineH) + 1));
+  const blessMax = Math.max(0, Math.min(5, Math.floor((bottomLimitY - 26 - infoY) / blessLineH) + 1));
   for(let i=0;i<Math.min(lines.length, blessMax);i++){
     ctx.fillText(lines[i], titleX, infoY);
     infoY += 52;
