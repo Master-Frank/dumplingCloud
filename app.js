@@ -1116,8 +1116,12 @@ async function generateShareImagePreview(){
   const dy = artBoxY + Math.floor((artBoxH - dh)/2);
   ctx.drawImage(artImg, dx, dy, dw, dh);
 
+  const qrSize = 240;
+  const qrBoxX = cardX + cardW - 56 - qrSize;
+  const qrBoxY = cardY + cardH - 56 - qrSize;
+  const qrTopY = qrBoxY - 70;
+  const maxTextW = (cardX + cardW - 56) - titleX;
   let infoY = artBoxY + artBoxH + 78;
-  const maxTextW = cardW - 112 - 340;
   ctx.fillStyle = "rgba(107,78,61,0.8)";
   ctx.font = "500 30px system-ui,-apple-system,Segoe UI,Roboto,PingFang SC,Microsoft YaHei,sans-serif";
   ctx.fillText("饺子馅人格标签", titleX, infoY);
@@ -1129,7 +1133,9 @@ async function generateShareImagePreview(){
   ctx.fillStyle = "rgba(107,78,61,0.92)";
   ctx.font = "500 32px system-ui,-apple-system,Segoe UI,Roboto,PingFang SC,Microsoft YaHei,sans-serif";
   const subLines = wrapLines(ctx, combo.sub, maxTextW);
-  for(let i=0;i<Math.min(subLines.length, 2);i++){
+  const subLineH = 46;
+  const subMax = Math.max(0, Math.min(5, Math.floor((qrTopY - 16 - infoY) / subLineH) + 1));
+  for(let i=0;i<Math.min(subLines.length, subMax);i++){
     ctx.fillText(subLines[i], titleX, infoY);
     infoY += 46;
   }
@@ -1142,7 +1148,9 @@ async function generateShareImagePreview(){
   ctx.fillStyle = "#3b2f2a";
   ctx.font = "650 36px system-ui,-apple-system,Segoe UI,Roboto,PingFang SC,Microsoft YaHei,sans-serif";
   const lines = wrapLines(ctx, bless, maxTextW);
-  for(let i=0;i<Math.min(lines.length, 4);i++){
+  const blessLineH = 52;
+  const blessMax = Math.max(0, Math.min(5, Math.floor((qrTopY - 16 - infoY) / blessLineH) + 1));
+  for(let i=0;i<Math.min(lines.length, blessMax);i++){
     ctx.fillText(lines[i], titleX, infoY);
     infoY += 52;
   }
@@ -1164,9 +1172,6 @@ async function generateShareImagePreview(){
   ctx.font = "600 30px system-ui,-apple-system,Segoe UI,Roboto,PingFang SC,Microsoft YaHei,sans-serif";
   ctx.fillText("人正在云包饺子", titleX + w1 + 12 + w2 + 12, infoY);
 
-  const qrSize = 240;
-  const qrBoxX = cardX + cardW - 56 - qrSize;
-  const qrBoxY = cardY + cardH - 56 - qrSize;
   roundRectPath(ctx, qrBoxX - 22, qrBoxY - 70, qrSize + 44, qrSize + 92, 34);
   ctx.fillStyle = "rgba(255,255,255,0.92)";
   ctx.fill();
